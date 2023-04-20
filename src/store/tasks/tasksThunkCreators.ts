@@ -1,4 +1,4 @@
-import {APItodolists, UpdateTaskModelType, UpdateTaskRequestType} from "../../api/api-todolists";
+import {UpdateTaskModelType, UpdateTaskRequestType} from "../../types/types";
 import {Dispatch} from "redux";
 import {addTaskAC, removeTaskAC, setTasksAC, updateTaskAC} from "./tasksActionCreators";
 import {ActionTasksType} from "./tasks-reducer";
@@ -6,6 +6,7 @@ import {AppRootStateType} from "../store";
 import {setErrorStatusAC, setLoadingStatusAC} from "../app/appActionsCreators";
 import {AppActionsType} from "../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-util";
+import { APItodolists } from "../../api/api-todolists";
 
 export const setTasksTC = (todolistID: string) => {
   return async (dispatch: Dispatch) => {

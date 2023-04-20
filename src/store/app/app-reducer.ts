@@ -1,13 +1,15 @@
-import {SetErrorStatusACType, SetLoadingStatusACType} from "./appActionsCreators";
+import {SetErrorStatusACType, SetIsInitializedACType, SetLoadingStatusACType} from "./appActionsCreators";
 
 const initialState = {
   isLoading: false,
-  error: null
+  error: null,
+  isInitialized: false
 }
 
 export type appStateType = {
   isLoading: boolean,
-  error: null | string
+  error: null | string,
+  isInitialized: boolean;
 }
 
 export const appReducer = (state: appStateType = initialState, action: AppActionsType): appStateType => {
@@ -16,9 +18,11 @@ export const appReducer = (state: appStateType = initialState, action: AppAction
       return {...state, isLoading: action.loading}
     case "APP/SET-ERROR-STATUS":
       return {...state, error: action.error}
+    case "APP/SET-IS-INITIALIZED":
+      return {...state, isInitialized: action.isInitialized}
     default:
       return state
   }
 }
 
-export type AppActionsType = SetLoadingStatusACType | SetErrorStatusACType
+export type AppActionsType = SetLoadingStatusACType | SetErrorStatusACType | SetIsInitializedACType

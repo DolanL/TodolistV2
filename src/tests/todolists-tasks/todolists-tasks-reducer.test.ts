@@ -3,7 +3,7 @@ import {addTodolistAC, removeTodolistAC} from "../../store/todolists/todolistAct
 import {TodolistDomainType, todolistsReducer} from "../../store/todolists/todolists-reducer";
 import {TasksStateType} from "../../components/TodolistList/TodolistList";
 import {tasksReducer} from "../../store/tasks/tasks-reducer";
-import {TaskStatuses} from "../../api/api-todolists";
+import {TaskStatuses} from "../../types/types";
 
 
 test('testing tasks and todolist: "Add todolist"', () => {

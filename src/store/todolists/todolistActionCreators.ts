@@ -1,5 +1,5 @@
 import {FilterType} from "../../components/TodolistList/TodolistList";
-import {TodolistType} from "../../api/api-todolists";
+import {TodolistType} from "../../types/types";
 
 export type UpdateTodolistTitleACType = ReturnType<typeof updateTodolistTitleAC>
 export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>

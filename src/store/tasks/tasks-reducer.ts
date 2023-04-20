@@ -6,7 +6,7 @@ import {
 } from "./tasksActionCreators";
 import {v1} from "uuid";
 import {AddTodolistACType, RemoveTodolistACType, SetTodolistsACType} from "../todolists/todolistActionCreators";
-import {TaskPriorities, TaskStatuses} from "../../api/api-todolists";
+import {TaskPriorities, TaskStatuses} from "../../types/types";
 
 
 export type ActionTasksType =

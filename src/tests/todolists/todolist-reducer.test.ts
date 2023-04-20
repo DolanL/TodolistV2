@@ -5,7 +5,7 @@ import {
   removeTodolistAC, setTodolistsAC,
   updateTodolistTitleAC
 } from "../../store/todolists/todolistActionCreators";
-import {TodolistType} from "../../api/api-todolists";
+import {TodolistType} from "../../types/types";
 
 
 

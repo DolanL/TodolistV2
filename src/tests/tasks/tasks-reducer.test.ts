@@ -1,7 +1,7 @@
 import {TasksStateType} from "../../components/TodolistList/TodolistList";
 import {addTaskAC, removeTaskAC, updateTaskAC} from "../../store/tasks/tasksActionCreators";
 import {tasksReducer} from "../../store/tasks/tasks-reducer";
-import {TaskStatuses} from "../../api/api-todolists";
+import {TaskStatuses} from "../../types/types";
 import {setTodolistsAC} from "../../store/todolists/todolistActionCreators";
 
 let initialState: TasksStateType

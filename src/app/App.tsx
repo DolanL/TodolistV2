@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import {AppBar, IconButton, Toolbar, Typography} from "@mui/material";
+import {AppBar, CircularProgress, IconButton, Toolbar, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import MenuIcon from '@mui/icons-material/Menu';
 import TodolistList from "../components/TodolistList/TodolistList";
@@ -13,9 +13,30 @@ import {
   Link,
 } from "react-router-dom";
 import {Login} from "../components/Login/Login";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "../store/store";
+import {meTC} from "../store/app/appThunkCreators";
+import {logOutTC} from "../store/login/login-reducer";
 
 
 function App() {
+
+  const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+  const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(meTC())
+  }, [])
+
+  if (!isInitialized) {
+    console.log(isInitialized)
+    return <CircularProgress style={{position: 'fixed', top: "40%", left: "50%"}} />
+  }
+
+  const onClickHandler = () => {
+    dispatch(logOutTC())
+  }
 
   return (
     <BrowserRouter>
@@ -34,7 +55,7 @@ function App() {
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
               News
             </Typography>
-            <Button color="inherit">Login</Button>
+            {isLoggedIn && <Button onClick={onClickHandler} color="inherit">Logout</Button>}
           </Toolbar>
           <ErrorMessage/>
         </AppBar>

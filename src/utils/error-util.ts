@@ -5,7 +5,7 @@ import {
   SetLoadingStatusACType
 } from "../store/app/appActionsCreators";
 import {Dispatch} from "redux";
-import {ResponseType} from "../api/api-todolists";
+import {ResponseType} from "../types/types";
 
 export const handleServerNetworkError = (dispatch: Dispatch<ErrorUtilsDispatchType>, e: any) => {
   dispatch(setLoadingStatusAC(false))

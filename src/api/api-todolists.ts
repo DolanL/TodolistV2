@@ -1,12 +1,6 @@
-import axios, {AxiosResponse} from "axios";
-
-const instance = axios.create({
-  baseURL: "https://social-network.samuraijs.com/api/1.1",
-  withCredentials: true,
-  headers: {
-    "API-KEY": "a16bf247-86f1-4ef4-99af-302bbb5da3d0"
-  },
-})
+import {AxiosResponse} from "axios";
+import {instance} from "./instance";
+import {GetTasksResponseType, PostProperties, TaskType, TodolistType, UpdateTaskRequestType, ResponseType} from "../types/types";
 
 export const APItodolists = {
   getTodolists: () => {
@@ -33,79 +27,4 @@ export const APItodolists = {
   deleteTask: (taskId: string, todolistId: string) => {
     return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
   }
-}
-
-export type UpdateTaskModelType = {
-  title?: string
-  description?: string
-  completed?: boolean
-  status?: number
-  priority?: number
-  startDate?: string
-  deadline?: string
-}
-
-export type UpdateTaskRequestType = {
-  title: string
-  description: string
-  completed: boolean
-  status: TaskStatuses
-  priority: number
-  startDate: string
-  deadline: string
-}
-
-export type ResponseType<D = {}> = {
-  data: D
-  fieldsErrors: []
-  messages: Array<string>
-  resultCode: number
-}
-
-type PostProperties = {
-  title: string
-}
-
-
-export type TodolistType = {
-  addedDate: string
-  id: string
-  order: number
-  title: string
-}
-
-export type TaskType = {
-  addedDate: string
-  deadline: string
-  description: string
-  id: string
-  order: number
-  priority: TaskPriorities
-  startDate: string
-  status: TaskStatuses
-  title: string
-  todoListId: string
-  completed: boolean
-}
-
-export enum TaskStatuses {
-  New,
-  InProgress,
-  Completed,
-  Draft
-}
-
-export enum TaskPriorities {
-  Low,
-  Middle,
-  Hi,
-  Urgently,
-  Later
-}
-
-
-export type GetTasksResponseType = {
-  error: string
-  items: TaskType[]
-  totalCount: number
 }

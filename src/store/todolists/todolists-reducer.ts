@@ -5,7 +5,7 @@ import {
   RemoveTodolistACType, SetTodolistsACType,
   UpdateTodolistTitleACType
 } from "./todolistActionCreators";
-import {TodolistType} from "../../api/api-todolists";
+import {TodolistType} from "../../types/types";
 
 
 export type ActionTodolistType = UpdateTodolistTitleACType | RemoveTodolistACType | ChangeTodolistFilterACType | AddTodolistACType | SetTodolistsACType

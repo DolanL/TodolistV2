@@ -2,22 +2,32 @@ import {useForm, SubmitHandler} from "react-hook-form";
 import style from "./Login.module.css"
 
 import {Grid, Input, Paper, Select} from "@mui/material";
-
-interface IFormInputs {
-  firstName: string
-  password: string
-}
+import {authProperties} from "../../types/types";
+import {AppRootStateType, useAppDispatch} from "../../store/store";
+import {loginTC} from "../../store/login/login-reducer";
+import {useSelector} from "react-redux";
+import { Navigate } from 'react-router-dom';
 
 
 export const Login = () => {
+
+  const dispatch = useAppDispatch()
+  const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.login.isLoggedIn)
+
   const {
     register, formState: {
       errors,
     }, handleSubmit
-  } = useForm<IFormInputs>({
+  } = useForm<authProperties>({
     mode: "onBlur"
   });
-  const onSubmit: SubmitHandler<IFormInputs> = (data: IFormInputs) => console.log(JSON.stringify(data));
+  const onSubmit: SubmitHandler<authProperties> = (data: authProperties) => {
+    dispatch(loginTC(data))
+  };
+
+  if (isLoggedIn) {
+    return <Navigate to={'/'}/>
+  }
 
   return (
     <Grid>
@@ -25,7 +35,7 @@ export const Login = () => {
         <form className={style.form} onSubmit={handleSubmit(onSubmit)}>
           <label>
             First Name:
-            <input {...register("firstName", {
+            <input className={style.input} {...register("email", {
               required: "Поле обязательно к заполнению!",
               minLength: {
                 value: 5,
@@ -33,10 +43,10 @@ export const Login = () => {
               }
             })}/>
           </label>
-          <div>{errors?.firstName && <p>{errors?.firstName?.message || "Error!"}</p>}</div>
+          <div>{errors?.email && <p>{errors?.email?.message || "Error!"}</p>}</div>
           <label>
             Password:
-            <input type={"password"} {...register("password", {
+            <input className={style.input} type={"password"} {...register("password", {
               required: "Поле обязательно к заполнению!",
               minLength: {
                 value: 5,
@@ -45,7 +55,8 @@ export const Login = () => {
             })}/>
           </label>
           <div>{errors?.password && <p>{errors?.password?.message || "Error!"}</p>}</div>
-          <button type="submit">submit</button>
+          <input type="checkbox" {...register("rememberMe")}/> <span>Remember me</span>
+          <button type="submit">login</button>
         </form>
       </Paper>
     </Grid>

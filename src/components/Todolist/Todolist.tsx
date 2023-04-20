@@ -4,7 +4,7 @@ import EditableSpan from "../EditableSpan/EditableSpan";
 import Button from "@mui/material/Button";
 import {ButtonGroup, IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {TaskStatuses, TaskType} from "../../api/api-todolists";
+import {TaskStatuses, TaskType} from "../../types/types";
 import Task from "../Task/Task";
 import {useAppDispatch} from "../../store/store";
 import {setTasksTC} from "../../store/tasks/tasksThunkCreators";

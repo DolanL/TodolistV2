@@ -1,4 +1,4 @@
-import {TaskType, UpdateTaskModelType} from "../../api/api-todolists";
+import {TaskType, UpdateTaskModelType} from "../../types/types";
 
 export type UpdateTaskACType = ReturnType<typeof updateTaskAC>
 export type RemoveTaskACType = ReturnType<typeof removeTaskAC>

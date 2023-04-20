@@ -13,7 +13,8 @@ import {
 } from "../../store/todolists/todolistsThunkCreators";
 import {addTaskTC, removeTaskTC, updateTaskTC} from "../../store/tasks/tasksThunkCreators";
 import {changeTodolistFilterAC} from "../../store/todolists/todolistActionCreators";
-import {TaskStatuses, TaskType} from "../../api/api-todolists";
+import {TaskStatuses, TaskType} from "../../types/types";
+import {Navigate} from "react-router-dom";
 
 
 export type TasksStateType = {
@@ -25,10 +26,15 @@ export type FilterType = 'all' | 'active' | 'completed'
 const TodolistList = () => {
   const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
   const todolists = useSelector<AppRootStateType, TodolistDomainType>(state => state.todolists)
+  const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
   const dispatch = useAppDispatch()
 
 
+
   useEffect(() => {
+    if (!isLoggedIn) {
+      return
+    }
     dispatch(setTodolistsTC())
   }, [dispatch])
 
@@ -65,6 +71,10 @@ const TodolistList = () => {
     dispatch(addTodolistTC(title))
   }, [dispatch])
 
+
+  if (!isLoggedIn) {
+    return <Navigate to={'/login'}/>
+  }
 
   return (
     <Container fixed>
