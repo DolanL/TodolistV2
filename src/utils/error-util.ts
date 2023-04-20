@@ -1,26 +1,17 @@
-import {
-  setErrorStatusAC,
-  SetErrorStatusACType,
-  setLoadingStatusAC,
-  SetLoadingStatusACType
-} from "../store/app/appActionsCreators";
 import {Dispatch} from "redux";
 import {ResponseType} from "../types/types";
+import {setErrorStatusAC, setLoadingStatusAC} from "../store/app/app-reducer";
 
-export const handleServerNetworkError = (dispatch: Dispatch<ErrorUtilsDispatchType>, e: any) => {
-  dispatch(setLoadingStatusAC(false))
+export const handleServerNetworkError = (dispatch: Dispatch, e: any) => {
+  dispatch(setLoadingStatusAC({isLoading: false}))
   dispatch(setErrorStatusAC(e.message ? e.message : "some Error"))
 }
 
-
-type ErrorUtilsDispatchType = SetLoadingStatusACType | SetErrorStatusACType
-
-
-export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch<ErrorUtilsDispatchType>) => {
+export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch) => {
   if (data.messages.length) {
-    dispatch(setErrorStatusAC(data.messages[0]))
+    dispatch(setErrorStatusAC({error: data.messages[0]}))
   } else {
-    dispatch(setErrorStatusAC("some error"))
+    dispatch(setErrorStatusAC({error: 'some error'}))
   }
-  dispatch(setLoadingStatusAC(false))
+  dispatch(setLoadingStatusAC({isLoading: false}))
 }

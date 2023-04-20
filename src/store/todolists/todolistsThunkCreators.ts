@@ -1,24 +1,17 @@
 import {Dispatch} from "redux";
-import {
-  addTodolistAC,
-  removeTodolistAC,
-  setTodolistsAC,
-  updateTodolistTitleAC
-} from "./todolistActionCreators";
+import {addTodolistAC, removeTodolistAC, setTodolistsAC, updateTodolistTitleAC} from "./todolistActionCreators";
 import {APItodolists} from "../../api/api-todolists";
 import {ActionTodolistType} from "./todolists-reducer";
-import {AppActionsType} from "../app/app-reducer";
-import {setErrorStatusAC, setLoadingStatusAC} from "../app/appActionsCreators";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-util";
-import {AxiosError} from "axios";
+import {setLoadingStatusAC} from "../app/app-reducer";
 
 export const setTodolistsTC = () => {
-  return async (dispatch: Dispatch<ActionTodolistType | AppActionsType>) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       const res = await APItodolists.getTodolists()
       dispatch(setTodolistsAC(res.data))
-      dispatch(setLoadingStatusAC(false))
+      dispatch(setLoadingStatusAC({isLoading: false}))
     }
     catch (e) {
       console.log(e)
@@ -27,13 +20,13 @@ export const setTodolistsTC = () => {
   }
 }
 export const addTodolistTC = (title: string) => {
-  return async (dispatch: Dispatch<ActionTodolistType | AppActionsType>) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       const res = await APItodolists.postTodolist({title})
       if (res.data.resultCode === 0) {
         dispatch(addTodolistAC(res.data.data.item))
-        dispatch(setLoadingStatusAC(false))
+        dispatch(setLoadingStatusAC({isLoading: false}))
       } else {
         handleServerAppError(res.data, dispatch)
       }
@@ -44,13 +37,13 @@ export const addTodolistTC = (title: string) => {
   }
 }
 export const removeTodolistTC = (todolistID: string) => {
-  return async (dispatch: Dispatch<ActionTodolistType | AppActionsType>) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       const res = await APItodolists.deleteTodolist(todolistID)
       if (res.data.resultCode === 0) {
         dispatch(removeTodolistAC(todolistID))
-        dispatch(setLoadingStatusAC(false))
+        dispatch(setLoadingStatusAC({isLoading: false}))
       } else {
         handleServerAppError(res.data, dispatch)
       }
@@ -61,12 +54,12 @@ export const removeTodolistTC = (todolistID: string) => {
   }
 }
 export const updateTodolistTitleTC = (todolistID: string, title: string) => {
-  return async (dispatch: Dispatch<ActionTodolistType | AppActionsType>) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       await APItodolists.updateTodolist(todolistID, {title})
       dispatch(updateTodolistTitleAC(todolistID, title))
-      dispatch(setLoadingStatusAC(false))
+      dispatch(setLoadingStatusAC({isLoading: false}))
     }
     catch (e) {
       handleServerNetworkError(dispatch, e)

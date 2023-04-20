@@ -3,34 +3,33 @@ import {Dispatch} from "redux";
 import {addTaskAC, removeTaskAC, setTasksAC, updateTaskAC} from "./tasksActionCreators";
 import {ActionTasksType} from "./tasks-reducer";
 import {AppRootStateType} from "../store";
-import {setErrorStatusAC, setLoadingStatusAC} from "../app/appActionsCreators";
-import {AppActionsType} from "../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-util";
 import { APItodolists } from "../../api/api-todolists";
+import {setErrorStatusAC, setLoadingStatusAC} from "../app/app-reducer";
 
 export const setTasksTC = (todolistID: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       const res = await APItodolists.getTasks((todolistID))
       dispatch(setTasksAC(res.data.items, todolistID))
-      dispatch(setLoadingStatusAC(false))
+      dispatch(setLoadingStatusAC({isLoading: false}))
     }
     catch (e) {
       console.log(e)
-      dispatch(setLoadingStatusAC(false))
-      dispatch(setErrorStatusAC(''))
+      dispatch(setLoadingStatusAC({isLoading: false}))
+      dispatch(setErrorStatusAC({error: ''}))
     }
   }
 }
 export const addTaskTC = (title: string, todolistID: string) => {
-  return async (dispatch: Dispatch<ActionTasksType | AppActionsType>) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       const response = await APItodolists.postTask({title}, todolistID)
       if (response.data.resultCode === 0) {
         dispatch(addTaskAC(response.data.data.item))
-        dispatch(setLoadingStatusAC(false))
+        dispatch(setLoadingStatusAC({isLoading: false}))
       } else {
         handleServerAppError(response.data, dispatch)
       }
@@ -41,13 +40,13 @@ export const addTaskTC = (title: string, todolistID: string) => {
   }
 }
 export const removeTaskTC = (taskId: string, todolistId: string) => {
-  return async (dispatch: Dispatch<ActionTasksType | AppActionsType>) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(setLoadingStatusAC(true))
+      dispatch(setLoadingStatusAC({isLoading: true}))
       const response = await APItodolists.deleteTask(taskId, todolistId)
       if (response.data.resultCode === 0) {
         dispatch(removeTaskAC(todolistId, taskId))
-        dispatch(setLoadingStatusAC(false))
+        dispatch(setLoadingStatusAC({isLoading: false}))
       }
     } catch (e) {
       handleServerNetworkError(dispatch, e)
@@ -55,7 +54,7 @@ export const removeTaskTC = (taskId: string, todolistId: string) => {
   }
 }
 export const updateTaskTC = (taskId: string, todolistId: string, updateTaskModel: UpdateTaskModelType) => {
-  return async (dispatch: Dispatch<ActionTasksType | AppActionsType>, getState: () => AppRootStateType) => {
+  return async (dispatch: Dispatch, getState: () => AppRootStateType) => {
     const tasks = getState().tasks
     const task = tasks[todolistId].find(task => task.id === taskId)
     if (!task) {
@@ -72,11 +71,11 @@ export const updateTaskTC = (taskId: string, todolistId: string, updateTaskModel
         ...updateTaskModel
       }
       try {
-        dispatch(setLoadingStatusAC(true))
+        dispatch(setLoadingStatusAC({isLoading: true}))
         const response = await APItodolists.updateTask(apiModel, todolistId, taskId)
         if (response.data.resultCode === 0) {
           dispatch(updateTaskAC(todolistId, taskId, updateTaskModel))
-          dispatch(setLoadingStatusAC(false))
+          dispatch(setLoadingStatusAC({isLoading: false}))
         } else {
           handleServerAppError(response.data, dispatch)
         }

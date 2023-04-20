@@ -1,10 +1,11 @@
 import {AnyAction, applyMiddleware, combineReducers, compose, createStore, legacy_createStore} from "redux";
 import {todolistsReducer} from "./todolists/todolists-reducer";
 import {tasksReducer} from "./tasks/tasks-reducer";
-import thunk, {ThunkDispatch} from "redux-thunk";
+import thunkMiddleWare, {ThunkDispatch} from "redux-thunk";
 import {useDispatch} from "react-redux";
 import {appReducer} from "./app/app-reducer";
 import {loginReducer} from "./login/login-reducer";
+import {configureStore} from "@reduxjs/toolkit";
 
 
 const rootReducer = combineReducers({
@@ -19,16 +20,22 @@ const rootReducer = combineReducers({
 export type AppRootStateType = ReturnType<typeof rootReducer>
 
 // Для работы Devtools расширения
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
+// declare global {
+//   interface Window {
+//     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+//   }
+// }
+//
+// const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
+// export const store = legacy_createStore(rootReducer, composeEnhancers(applyMiddleware(), applyMiddleware(thunk)))
 
-export const store = legacy_createStore(rootReducer, composeEnhancers(applyMiddleware(), applyMiddleware(thunk)))
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleWare)
+})
+
 
 type ThunkAppDispatchType = ThunkDispatch<AppRootStateType, any, AnyAction>
 

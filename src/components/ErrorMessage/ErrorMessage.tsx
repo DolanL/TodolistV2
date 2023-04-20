@@ -2,8 +2,8 @@ import React from 'react';
 import {Alert, Snackbar} from "@mui/material";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../../store/store";
-import {appStateType} from "../../store/app/app-reducer";
-import {setErrorStatusAC} from "../../store/app/appActionsCreators";
+import {setErrorStatusAC} from "../../store/app/app-reducer";
+
 
 
 
@@ -13,16 +13,16 @@ export const ErrorMessage = () => {
 
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      dispatch(setErrorStatusAC(null))
+      dispatch(setErrorStatusAC({error: ''}))
     }
 
-    dispatch(setErrorStatusAC(null))
+    dispatch(setErrorStatusAC({error: ''}))
   };
 
 
   return (
     {error} &&
-    <Snackbar open={error !== null} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar open={error !== ''} autoHideDuration={6000} onClose={handleClose}>
       <Alert severity="error" sx={{ width: '100%' }}>
         {error}
       </Alert>
