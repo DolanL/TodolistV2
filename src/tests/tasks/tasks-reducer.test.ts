@@ -1,8 +1,8 @@
 import {TasksStateType} from "../../components/TodolistList/TodolistList";
-import {addTaskAC, removeTaskAC, updateTaskAC} from "../../store/tasks/tasksActionCreators";
-import {tasksReducer} from "../../store/tasks/tasks-reducer";
+import {addTaskAC, removeTaskAC, tasksReducer, updateTaskAC} from "../../store/tasks/tasks-reducer";
 import {TaskStatuses} from "../../types/types";
-import {setTodolistsAC} from "../../store/todolists/todolistActionCreators";
+import {setTodolistsAC} from "../../store/todolists/todolists-reducer";
+
 
 let initialState: TasksStateType
 
@@ -39,7 +39,7 @@ beforeEach(() => {
 
 test('testing update task title', () => {
 
-  const newState = tasksReducer(initialState, updateTaskAC('1', '2', {title: 'newTitle'}))
+  const newState = tasksReducer(initialState, updateTaskAC({todolistID: '1', taskID: '2', updateTaskModel: {title: 'newTitle'}}))
 
   expect(newState['1'][1].title).toBe('newTitle')
   expect(newState['1'].length).toBe(3)
@@ -48,7 +48,7 @@ test('testing update task title', () => {
 
 test('testing remove task', () => {
 
-  const newState = tasksReducer(initialState, removeTaskAC('2', '1'))
+  const newState = tasksReducer(initialState, removeTaskAC({taskID: '2', todolistID: '1'}))
 
   expect(newState['2'][0].id).toBe('2')
   expect(newState['2'].length).toBe(1)
@@ -57,10 +57,10 @@ test('testing remove task', () => {
 
 test('testing add task', () => {
 
-  const newState = tasksReducer(initialState, addTaskAC({
+  const newState = tasksReducer(initialState, addTaskAC({task:{
     id: '3', title: 'React', status: TaskStatuses.New, addedDate: '', deadline: '',
     description: '', order: 3, priority: 3, startDate: '', todoListId: '2', completed: true
-  }))
+  }}))
 
   expect(newState['2'][2].title).toBe('React')
   expect(newState['2'].length).toBe(3)
@@ -74,7 +74,7 @@ test('testing set Todolists', () => {
     {id: '2', title: 'What to buy', order: 2, filter: 'all', addedDate: ''}
   ]
 
-  const newState = tasksReducer({}, setTodolistsAC(todolistsForTest))
+  const newState = tasksReducer({}, setTodolistsAC({todolists: todolistsForTest}))
 
 
   const keys = Object.keys(newState)

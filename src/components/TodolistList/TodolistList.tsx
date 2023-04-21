@@ -4,7 +4,7 @@ import AddItemForm from "../AddItemForm/AddItemForm";
 import Todolist from "../Todolist/Todolist";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../../store/store";
-import {TodolistDomainType} from "../../store/todolists/todolists-reducer";
+import {changeTodolistFilterAC, TodolistDomainType} from "../../store/todolists/todolists-reducer";
 import {
   addTodolistTC,
   removeTodolistTC,
@@ -12,7 +12,6 @@ import {
   updateTodolistTitleTC
 } from "../../store/todolists/todolistsThunkCreators";
 import {addTaskTC, removeTaskTC, updateTaskTC} from "../../store/tasks/tasksThunkCreators";
-import {changeTodolistFilterAC} from "../../store/todolists/todolistActionCreators";
 import {TaskStatuses, TaskType} from "../../types/types";
 import {Navigate} from "react-router-dom";
 
@@ -56,7 +55,7 @@ const TodolistList = () => {
   }, [dispatch])
 
   const changeFilter = useCallback((filter: FilterType, todolistID: string) => {
-    dispatch(changeTodolistFilterAC(todolistID, filter))
+    dispatch(changeTodolistFilterAC({todolistID, filter}))
   }, [dispatch])
 
   const addTask = useCallback((newTitle: string, todolistID: string) => {
@@ -84,7 +83,6 @@ const TodolistList = () => {
       <Grid container spacing={5}>
         {
           todolists.map(todolist => {
-
             let tasksForTodolist = tasks[todolist.id]
 
             return <Grid key={todolist.id} item>

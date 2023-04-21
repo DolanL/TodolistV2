@@ -1,6 +1,10 @@
 import {v1} from "uuid";
-import {addTodolistAC, removeTodolistAC} from "../../store/todolists/todolistActionCreators";
-import {TodolistDomainType, todolistsReducer} from "../../store/todolists/todolists-reducer";
+import {
+  addTodolistAC,
+  removeTodolistAC,
+  TodolistDomainType,
+  todolistsReducer
+} from "../../store/todolists/todolists-reducer";
 import {TasksStateType} from "../../components/TodolistList/TodolistList";
 import {tasksReducer} from "../../store/tasks/tasks-reducer";
 import {TaskStatuses} from "../../types/types";
@@ -14,7 +18,7 @@ test('testing tasks and todolist: "Add todolist"', () => {
 
   const newTodolist = {id: '1', title: 'newTitle', order: 3, addedDate: ''}
 
-  const action = addTodolistAC(newTodolist)
+  const action = addTodolistAC({todolist: newTodolist})
 
   const newTodolistsState = todolistsReducer(initialStateTodolists, action)
   const newTasksState = tasksReducer(initialStateTasks, action)
@@ -25,8 +29,8 @@ test('testing tasks and todolist: "Add todolist"', () => {
   const idFromTasks = keys[0]
 
 
-  expect(idFromTasks).toEqual(action.todolist.id)
-  expect(idFromTodolists).toEqual(action.todolist.id)
+  expect(idFromTasks).toEqual(action.payload.todolist.id)
+  expect(idFromTodolists).toEqual(action.payload.todolist.id)
   expect(newTodolistsState[0].filter).toBe('all')
 })
 
@@ -69,7 +73,7 @@ test('testing tasks and todolists: "Remove todolist"', () => {
     ]
   }
 
-  const action = removeTodolistAC('1')
+  const action = removeTodolistAC({todolistID: '1'})
 
   const newTodolistsState = todolistsReducer(initialStateTodolists, action)
   const newTasksState = tasksReducer(initialStateTasks, action)
@@ -79,8 +83,8 @@ test('testing tasks and todolists: "Remove todolist"', () => {
   const idFromTasks = keys[0]
 
   expect(idFromTasks).toEqual(idFromTodolists)
-  expect(idFromTodolists).not.toEqual(action.todolistID)
-  expect(idFromTasks).not.toEqual(action.todolistID)
+  expect(idFromTodolists).not.toEqual(action.payload.todolistID)
+  expect(idFromTasks).not.toEqual(action.payload.todolistID)
   expect(newTodolistsState.length).toBe(1)
   expect(newTasksState['1']).not.toBeDefined()
 })

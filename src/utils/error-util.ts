@@ -4,7 +4,7 @@ import {setErrorStatusAC, setLoadingStatusAC} from "../store/app/app-reducer";
 
 export const handleServerNetworkError = (dispatch: Dispatch, e: any) => {
   dispatch(setLoadingStatusAC({isLoading: false}))
-  dispatch(setErrorStatusAC(e.message ? e.message : "some Error"))
+  dispatch(setErrorStatusAC({error: e.message ? e.message : "some Error"}))
 }
 
 export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch) => {

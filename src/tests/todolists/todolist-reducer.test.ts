@@ -1,10 +1,10 @@
-import {TodolistDomainType, todolistsReducer} from "../../store/todolists/todolists-reducer";
 import {
   addTodolistAC,
-  changeTodolistFilterAC,
-  removeTodolistAC, setTodolistsAC,
+  changeTodolistFilterAC, removeTodolistAC, setTodolistsAC,
+  TodolistDomainType,
+  todolistsReducer,
   updateTodolistTitleAC
-} from "../../store/todolists/todolistActionCreators";
+} from "../../store/todolists/todolists-reducer";
 import {TodolistType} from "../../types/types";
 
 
@@ -23,7 +23,7 @@ test('testing update todolist title', () => {
 
   const newTitle = 'What'
 
-  const newState = todolistsReducer(initialState, updateTodolistTitleAC('1', newTitle))
+  const newState = todolistsReducer(initialState, updateTodolistTitleAC({todolistID: '1', newTitle}))
 
 
   expect(newState[0].title).toBe('What')
@@ -33,7 +33,7 @@ test('testing update todolist title', () => {
 
 test('testing remove todolist', () =>  {
 
-  const newState = todolistsReducer(initialState, removeTodolistAC('1'))
+  const newState = todolistsReducer(initialState, removeTodolistAC({todolistID: '1'}))
 
   expect(newState[0].title).toBe('What to buy')
   expect(newState.length).toBe(1)
@@ -42,7 +42,7 @@ test('testing remove todolist', () =>  {
 
 test('testing change todolist filter', () => {
 
-  const newState = todolistsReducer(initialState, changeTodolistFilterAC('1', 'active'))
+  const newState = todolistsReducer(initialState, changeTodolistFilterAC({todolistID: '1', filter: 'active'}))
 
   expect(newState[0].filter).toBe('active')
   expect(newState[1].title).toBe('What to buy')
@@ -51,7 +51,7 @@ test('testing change todolist filter', () => {
 
 test('testing add todolist', () => {
 
-  const newState = todolistsReducer(initialState, addTodolistAC({id: '3', title: 'newTitle', order: 3, addedDate: ''}))
+  const newState = todolistsReducer(initialState, addTodolistAC({todolist: {id: '3', title: 'newTitle', order: 3, addedDate: ''}}))
 
   expect(newState[2].title).toBe('newTitle')
   expect(newState.length).toBe(3)
@@ -59,7 +59,7 @@ test('testing add todolist', () => {
 
 test('testing set todolists', () => {
 
-  const newState = todolistsReducer([], setTodolistsAC(initialState))
+  const newState = todolistsReducer([], setTodolistsAC({todolists: initialState}))
 
   expect(newState.length).toBe(2)
 })

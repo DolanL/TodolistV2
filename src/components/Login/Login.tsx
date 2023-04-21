@@ -34,7 +34,7 @@ export const Login = () => {
       <Paper style={{padding: '10px', maxWidth: '500px', margin: "20px auto"}}>
         <form className={style.form} onSubmit={handleSubmit(onSubmit)}>
           <label>
-            First Name:
+            Email:
             <input className={style.input} {...register("email", {
               required: "Поле обязательно к заполнению!",
               minLength: {

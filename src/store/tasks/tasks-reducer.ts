@@ -1,55 +1,42 @@
 import {TasksStateType} from "../../components/TodolistList/TodolistList";
-import {
-  AddTaskACType,
-  RemoveTaskACType, SetTasksACType,
-  UpdateTaskACType
-} from "./tasksActionCreators";
-import {v1} from "uuid";
-import {AddTodolistACType, RemoveTodolistACType, SetTodolistsACType} from "../todolists/todolistActionCreators";
-import {TaskPriorities, TaskStatuses} from "../../types/types";
+import {TaskType, UpdateTaskModelType} from "../../types/types";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {addTodolistAC, removeTodolistAC, setTodolistsAC} from "../todolists/todolists-reducer";
 
-
-export type ActionTasksType =
-  UpdateTaskACType
-  | RemoveTaskACType
-  | AddTaskACType
-  | AddTodolistACType
-  | RemoveTodolistACType
-  | SetTodolistsACType
-  | SetTasksACType
 
 const initialState: TasksStateType = {}
 
-export const tasksReducer = (state = initialState, action: ActionTasksType): TasksStateType => {
-  switch (action.type) {
-    case 'UPDATE-TASK':
-      return {...state,
-        [action.todolistID]: state[action.todolistID].map(task => task.id === action.taskID ? {...task, ...action.updateTaskModel} : task)}
-    case 'REMOVE-TASK':
-      return {...state, [action.todolistID]: state[action.todolistID].filter(task => task.id !== action.taskID)}
-    case "ADD-TASK":
-      return {
-        ...state, [action.task.todoListId]: [...state[action.task.todoListId], {...action.task}
-        ]
-      }
-    case "ADD-TODOLIST":
-      return {...state, [action.todolist.id]: []}
-    case "REMOVE-TODOLIST":
-      const newState = {...state}
-      delete newState[action.todolistID]
-      return newState
-    case "SET-TODOLISTS":
-      const stateCopy = {...state}
-      action.todolists.forEach(tl => {
-        stateCopy[tl.id] = []
+const slice = createSlice({
+  name: "tasks",
+  initialState: initialState,
+  reducers: {
+    updateTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string, updateTaskModel: UpdateTaskModelType }>) {
+      state[action.payload.todolistID] = state[action.payload.todolistID].map(task => task.id === action.payload.taskID ? {...task, ...action.payload.updateTaskModel} : task)
+    },
+    removeTaskAC(state, action: PayloadAction<{ taskID: string, todolistID: string }>) {
+      state[action.payload.todolistID] = state[action.payload.todolistID].filter(task => task.id !== action.payload.taskID)
+    },
+    addTaskAC(state, action: PayloadAction<{ task: TaskType }>) {
+      state[action.payload.task.todoListId].push(action.payload.task)
+    },
+    setTasksAC(state, action: PayloadAction<{ tasks: Array<TaskType>, todolistID: string }>) {
+      state[action.payload.todolistID] = action.payload.tasks
+    }
+  },
+  extraReducers(builder) {
+    builder.addCase(addTodolistAC, (state, action) => {
+      state[action.payload.todolist.id] = []
+    });
+    builder.addCase(removeTodolistAC, (state, action) => {
+      delete state[action.payload.todolistID]
+    });
+    builder.addCase(setTodolistsAC, (state, action) => {
+      action.payload.todolists.forEach(tl => {
+        state[tl.id] = []
       })
-      return stateCopy
-    case "SET-TASKS":
-      const tasksCopy = {...state}
-      tasksCopy[action.todolistID] = action.tasks
-      return tasksCopy
-    default:
-      return state
+    })
   }
-}
+})
 
+export const tasksReducer = slice.reducer
+export const {updateTaskAC, removeTaskAC, addTaskAC, setTasksAC} = slice.actions

@@ -1,37 +1,39 @@
 import {FilterType} from "../../components/TodolistList/TodolistList";
-import {
-  AddTodolistACType,
-  ChangeTodolistFilterACType,
-  RemoveTodolistACType, SetTodolistsACType,
-  UpdateTodolistTitleACType
-} from "./todolistActionCreators";
 import {TodolistType} from "../../types/types";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-
-export type ActionTodolistType = UpdateTodolistTitleACType | RemoveTodolistACType | ChangeTodolistFilterACType | AddTodolistACType | SetTodolistsACType
 
 const initialState: TodolistDomainType = []
 
 export type TodolistDomainType = Array<TodolistType & { filter: FilterType }>
 
-export const todolistsReducer = (state: TodolistDomainType = initialState, action: ActionTodolistType): TodolistDomainType => {
-  switch (action.type) {
-    case 'UPDATE-TODOLIST-TITLE':
-      return state.map(tl => tl.id === action.todolistID ? {...tl, title: action.newTitle} : tl)
-    case "REMOVE-TODOLIST":
-      return state.filter(tl => tl.id !== action.todolistID)
-    case "CHANGE-TODOLIST-FILTER":
-      return state.map(tl => tl.id === action.todolistID ? {...tl, filter: action.filter} : tl)
-    case "ADD-TODOLIST":
-      return [...state, {...action.todolist, filter: 'all'}]
-    case "SET-TODOLISTS":
-      return action.todolists.map(tl => {
+
+export const slice = createSlice({
+  name: "todolists",
+  initialState: initialState,
+  reducers: {
+    updateTodolistTitleAC (state, action: PayloadAction<{todolistID: string, newTitle: string}>) {
+      return state.map(tl => tl.id === action.payload.todolistID ? {...tl, title: action.payload.newTitle} : tl)
+    },
+    removeTodolistAC (state, action: PayloadAction<{todolistID: string}>) {
+      return state.filter(tl => tl.id !== action.payload.todolistID)
+    },
+    changeTodolistFilterAC (state, action: PayloadAction<{todolistID: string, filter: FilterType}>) {
+      return state.map(tl => tl.id === action.payload.todolistID ? {...tl, filter: action.payload.filter}: tl)
+    },
+    addTodolistAC (state, action: PayloadAction<{todolist: TodolistType}>) {
+      state.push({...action.payload.todolist, filter: 'all'})
+    },
+    setTodolistsAC (state, action: PayloadAction<{todolists: Array<TodolistType>}>) {
+      return action.payload.todolists.map(tl => {
         return {...tl, filter: 'all'}
       })
-    default:
-      return state
+    }
   }
-}
+})
+
+export const todolistsReducer = slice.reducer
+export const {updateTodolistTitleAC, removeTodolistAC, changeTodolistFilterAC, addTodolistAC, setTodolistsAC} = slice.actions
 
 
 
